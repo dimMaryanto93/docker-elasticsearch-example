@@ -117,3 +117,27 @@ POST /products/default/1/_update
 - Specialize data type
     - IP address
     - Attachment Data type
+
+## Create manualy stucture
+
+```http request
+PUT /products
+{
+  "mappings": {
+    "default" : {
+      "dynamic": false,
+      "properties": {
+        "name": {
+          "type": "text"
+        },
+        "qty": {
+          "type": "integer"
+        },
+        "category": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
+```
