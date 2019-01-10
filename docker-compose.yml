@@ -39,6 +39,8 @@ services:
       - elasticsearch
   filebeats: 
     image: docker.elastic.co/beats/filebeat:6.5.4
+    labels:
+      - co.elastic.logs/module=logstash
     environment:
       - setup.kibana.host=kibana:5601
       - output.elasticsearch.hosts=["elasticsearch:9200"]
