@@ -1,5 +1,20 @@
 version: '3.6'
 services:
+  mysql:
+    image: mysql:5.7
+    ports: 
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=example
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    volumes:
+      - mysql_data:/var/lib/mysql
+    depends_on: 
+      - kibana
+      - elasticsearch
+      - filebeats
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
     ports:
@@ -20,7 +35,34 @@ services:
       - 5601:5601
     networks:
       - elasticsearch_network
+    depends_on: 
+      - elasticsearch
+  filebeats: 
+    image: docker.elastic.co/beats/filebeat:6.5.4
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    networks:
+      - elasticsearch_network
+    ports:
+      - 5044:5044
+    volumes:
+      - filebeat_data:/usr/share/filebeat/data
+    depends_on: 
+      - kibana
+      - logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.5.4
+    ports: 
+      - 9600:9600
+    networks:
+      - elasticsearch_network
+    depends_on: 
+      - elasticsearch
+      - kibana
 volumes:
   elasticsearch_data:
+  filebeat_data:
+  mysql_data:
 networks:
   elasticsearch_network:
