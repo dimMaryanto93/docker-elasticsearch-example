@@ -1,6 +1,22 @@
 # Belajar elasticsearch with Springboot
 
-Running elastic via docker compose,
+Running elastic via docker compose, initial database data:
+
+```docker
+# run service mysql
+docker-compose up mysql
+
+# connect to mysql
+mysql -h 127.0.0.1 -u root -p
+
+# change connection to example database
+use example
+
+# import data to database
+source mysql/init-table-schema.sql
+```
+
+running all services with daemon
 
 ```docker
 docker-compose up -d
