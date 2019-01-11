@@ -11,6 +11,8 @@ services:
       - MYSQL_PASSWORD=admin
     volumes:
       - mysql_data:/var/lib/mysql
+    networks: 
+      - elasticsearch_network
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
     ports:
@@ -33,30 +35,16 @@ services:
       - elasticsearch_network
     depends_on: 
       - elasticsearch
-  # filebeats: 
-  #   image: docker.elastic.co/beats/filebeat:6.5.4
-  #   labels:
-  #     - co.elastic.logs/module=logstash
-  #   environment:
-  #     - setup.kibana.host=kibana:5601
-  #     - output.elasticsearch.hosts=["elasticsearch:9200"]
-  #   networks:
-  #     - elasticsearch_network
-  #   ports:
-  #     - 5044:5044
-  #   volumes:
-  #     - filebeat_data:/usr/share/filebeat/data
-  #   depends_on: 
-  #     - kibana
-  #     - logstash
   logstash:
     build: ./logstash/
-    image: dimmaryanto93/logstash-jdbc-plugin:1.0
+    image: dimmaryanto93/logstash-jdbc-plugin:1.1
     ports: 
       - 9600:9600
       - 5044:5044
     networks:
       - elasticsearch_network
+    volumes: 
+      - ./logstash/jdbc-input-plugin.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on: 
       - elasticsearch
       - kibana
