@@ -1,4 +1,4 @@
-# Belajar elasticsearch with Springboot
+# Belajar elasticsearch
 
 Running elastic via docker compose, initial database data:
 
